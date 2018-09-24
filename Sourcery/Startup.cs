@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Sourcery.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sourcery.Models;
 
 namespace Sourcery
 {
@@ -27,6 +28,17 @@ namespace Sourcery
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 5;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                //options.Password.RequireNonLetterOrDigit = true;
+                options.Password.RequireUppercase = false;
+            });
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -41,6 +53,9 @@ namespace Sourcery
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddDbContext<SourceryContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("SourceryContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

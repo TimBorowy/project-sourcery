@@ -30,9 +30,9 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="Links" asp-action="Index">Link</a></li>
+                    <li><a asp-area="" asp-controller="Categories" asp-action="Index">Category</a></li>
+                    <li><a asp-area="" asp-controller="Tags" asp-action="Index">Tag</a></li>
                 </ul>
                 <partial name="_LoginPartial" />
             </div>
@@ -45,7 +45,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2018 - Sourcery</p>
+            <p>&copy; @DateTime.Now.Year.ToString() - Sourcery</p>
         </footer>
     </div>
 

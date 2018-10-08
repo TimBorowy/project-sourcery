@@ -10,22 +10,22 @@ using Sourcery.Models;
 
 namespace Sourcery.Controllers
 {
-    public class LinksController : Controller
+    public class CategoriesController : Controller
     {
         private readonly SourceryContext _context;
 
-        public LinksController(SourceryContext context)
+        public CategoriesController(SourceryContext context)
         {
             _context = context;
         }
 
-        // GET: Links
+        // GET: Categories
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Link.ToListAsync());
+            return View(await _context.Category.ToListAsync());
         }
 
-        // GET: Links/Details/5
+        // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.GetLinkWIthCategories(id.Value);
-              
-            if (link == null)
+            var category = await _context.Category
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(link);
+            return View(category);
         }
 
-        // GET: Links/Create
+        // GET: Categories/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Links/Create
+        // POST: Categories/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LinkAddress,AddDate,Score,CategoryId")] Link link)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(link);
+                _context.Add(category);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(link);
+            return View(category);
         }
 
-        // GET: Links/Edit/5
+        // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.Link.FindAsync(id);
-            if (link == null)
+            var category = await _context.Category.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
-            return View(link);
+            return View(category);
         }
 
-        // POST: Links/Edit/5
+        // POST: Categories/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LinkAddress,AddDate,Score,CategoryId")] Link link)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
         {
-            if (id != link.Id)
+            if (id != category.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Sourcery.Controllers
             {
                 try
                 {
-                    _context.Update(link);
+                    _context.Update(category);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LinkExists(link.Id))
+                    if (!CategoryExists(category.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Sourcery.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(link);
+            return View(category);
         }
 
-        // GET: Links/Delete/5
+        // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +124,30 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.Link
+            var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (link == null)
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(link);
+            return View(category);
         }
 
-        // POST: Links/Delete/5
+        // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var link = await _context.Link.FindAsync(id);
-            _context.Link.Remove(link);
+            var category = await _context.Category.FindAsync(id);
+            _context.Category.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LinkExists(int id)
+        private bool CategoryExists(int id)
         {
-            return _context.Link.Any(e => e.Id == id);
+            return _context.Category.Any(e => e.Id == id);
         }
     }
 }

@@ -10,22 +10,22 @@ using Sourcery.Models;
 
 namespace Sourcery.Controllers
 {
-    public class LinksController : Controller
+    public class TagsController : Controller
     {
         private readonly SourceryContext _context;
 
-        public LinksController(SourceryContext context)
+        public TagsController(SourceryContext context)
         {
             _context = context;
         }
 
-        // GET: Links
+        // GET: Tags
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Link.ToListAsync());
+            return View(await _context.Tag.ToListAsync());
         }
 
-        // GET: Links/Details/5
+        // GET: Tags/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.GetLinkWIthCategories(id.Value);
-              
-            if (link == null)
+            var tag = await _context.Tag
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return View(link);
+            return View(tag);
         }
 
-        // GET: Links/Create
+        // GET: Tags/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Links/Create
+        // POST: Tags/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,LinkAddress,AddDate,Score,CategoryId")] Link link)
+        public async Task<IActionResult> Create([Bind("Id,Name")] Tag tag)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(link);
+                _context.Add(tag);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(link);
+            return View(tag);
         }
 
-        // GET: Links/Edit/5
+        // GET: Tags/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.Link.FindAsync(id);
-            if (link == null)
+            var tag = await _context.Tag.FindAsync(id);
+            if (tag == null)
             {
                 return NotFound();
             }
-            return View(link);
+            return View(tag);
         }
 
-        // POST: Links/Edit/5
+        // POST: Tags/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,LinkAddress,AddDate,Score,CategoryId")] Link link)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Tag tag)
         {
-            if (id != link.Id)
+            if (id != tag.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Sourcery.Controllers
             {
                 try
                 {
-                    _context.Update(link);
+                    _context.Update(tag);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LinkExists(link.Id))
+                    if (!TagExists(tag.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Sourcery.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(link);
+            return View(tag);
         }
 
-        // GET: Links/Delete/5
+        // GET: Tags/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +124,30 @@ namespace Sourcery.Controllers
                 return NotFound();
             }
 
-            var link = await _context.Link
+            var tag = await _context.Tag
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (link == null)
+            if (tag == null)
             {
                 return NotFound();
             }
 
-            return View(link);
+            return View(tag);
         }
 
-        // POST: Links/Delete/5
+        // POST: Tags/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var link = await _context.Link.FindAsync(id);
-            _context.Link.Remove(link);
+            var tag = await _context.Tag.FindAsync(id);
+            _context.Tag.Remove(tag);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool LinkExists(int id)
+        private bool TagExists(int id)
         {
-            return _context.Link.Any(e => e.Id == id);
+            return _context.Tag.Any(e => e.Id == id);
         }
     }
 }

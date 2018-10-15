@@ -22,7 +22,7 @@ namespace Sourcery.Controllers
         // GET: Links
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Link.ToListAsync());
+            return View(await _context.Link.Include(t => t.Category).ToListAsync());
         }
 
         // GET: Links/Details/5
